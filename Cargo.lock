@@ -1736,12 +1736,16 @@ name = "custom_callback"
 version = "0.22.0-alpha.1+dev"
 dependencies = [
  "bincode",
+ "clap",
+ "eframe",
+ "egui",
  "mimalloc",
  "parking_lot",
  "re_crash_handler",
  "re_error",
  "rerun",
  "serde",
+ "serde_json",
  "tokio",
 ]
 

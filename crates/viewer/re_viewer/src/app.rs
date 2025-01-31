@@ -481,6 +481,18 @@ impl App {
         self.view_class_registry.add_class::<T>()
     }
 
+    pub fn current_time_int(&self) -> Option<i64> {
+        self.state.first_recording_time_int()
+    }
+
+    pub fn set_current_time_int(&mut self, frame_idx: i64) {
+        self.state.set_first_recording_time_int(frame_idx);
+    }
+
+    pub fn active_recording_id(&self) -> Option<re_log_types::StoreId> {
+        self.store_hub.as_ref()?.active_recording_id().cloned()
+    }
+
     fn check_keyboard_shortcuts(&self, egui_ctx: &egui::Context) {
         if let Some(cmd) = UICommand::listen_for_kb_shortcut(egui_ctx) {
             self.command_sender.send_ui(cmd);

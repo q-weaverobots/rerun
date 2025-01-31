@@ -3,7 +3,7 @@ use egui::NumExt as _;
 
 use re_chunk_store::LatestAtQuery;
 use re_entity_db::EntityDb;
-use re_log_types::{LogMsg, ResolvedTimeRangeF, StoreId};
+use re_log_types::{LogMsg, NonMinI64, ResolvedTimeRangeF, StoreId};
 use re_smart_channel::ReceiveSet;
 use re_types::blueprint::components::PanelState;
 use re_ui::{ContextExt as _, DesignTokens};
@@ -108,6 +108,28 @@ pub(crate) struct WelcomeScreenState {
 }
 
 impl AppState {
+    pub fn first_recording_time_int(&self) -> Option<i64> {
+        let (_, rec_cfg) = self.recording_configs.iter().next()?;
+
+        let time_ctrl = rec_cfg.time_ctrl.read();
+
+        time_ctrl.time_int().map(|time_int| time_int.as_i64())
+    }
+
+    pub fn set_first_recording_time_int(&mut self, frame_idx: i64) {
+        let Some((_, rec_cfg)) = self.recording_configs.iter_mut().next() else {
+            return;
+        };
+
+        let Some(non_min) = NonMinI64::new(frame_idx) else {
+            re_log::warn!("Cannot set time to i64::MIN!");
+            return;
+        };
+
+        let mut time_ctrl = rec_cfg.time_ctrl.write();
+        time_ctrl.set_time(re_log_types::TimeInt::from_sequence(non_min));
+    }
+
     pub fn set_examples_manifest_url(&mut self, egui_ctx: &egui::Context, url: String) {
         self.welcome_screen.set_examples_manifest_url(egui_ctx, url);
     }

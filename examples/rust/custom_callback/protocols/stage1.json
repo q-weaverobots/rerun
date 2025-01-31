@@ -1,0 +1,17 @@
+{
+    "protocol": [
+        "Grab the leftmost and rightmost edges of the t-shirt",
+        "Lift the t-shirt in the air, flick the t-shirt out to open it up, and place it down on the surface parallel to your arms",
+        "The neckline and shoulder seams of the t-shirt are visible. Grab both shoulder seams and bring them down on the surface parallel to your arms",
+        "Grab and place the base of the shirt away from you so that the neckline and shoulder seams are clearly visible",
+        "Grab the creased edge of the t-shirt and pull it out to open it up",
+        "Grab the edge of the t-shirt and fold it in to reveal any edges that have been folded behind the viewable t-shirt."
+    ],
+    "annotations": [
+        {
+            "id": 0,
+            "frame_idx": 0,
+            "text": "You are a bi-manual robot named Isaac. Your objective is to unfold the crumpled up t-shirt in front of you so that it is flat on the surface. The neckline and arms should be laid out closer to you and the square bottom of the t-shirt should be laid out further away from you when your task is complete."
+        }
+    ]
+}

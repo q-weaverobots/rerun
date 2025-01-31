@@ -78,71 +78,71 @@ impl ControlViewer {
         }
     }
 
-    pub async fn run(self) {
-        re_log::info!("Starting client");
+    // pub async fn run(self) {
+    //     re_log::info!("Starting client");
 
-        // Spawn a background task to handle messages from the global channel.
-        {
-            let rx = Arc::clone(&self.rx);
-            let message_queue = Arc::clone(&self.message_queue);
-            let notify = Arc::clone(&self.notify);
-            tokio::spawn(async move {
-                Self::global_message_handler(rx, message_queue, notify).await;
-            });
-        }
+    //     // Spawn a background task to handle messages from the global channel.
+    //     {
+    //         let rx = Arc::clone(&self.rx);
+    //         let message_queue = Arc::clone(&self.message_queue);
+    //         let notify = Arc::clone(&self.notify);
+    //         tokio::spawn(async move {
+    //             Self::global_message_handler(rx, message_queue, notify).await;
+    //         });
+    //     }
 
-        loop {
-            match TcpStream::connect(self.address.clone()).await {
-                Ok(socket) => {
-                    if let Err(err) = socket.set_linger(Some(Duration::from_secs(2))) {
-                        re_log::error!(
-                            "Failed to set socket linger: {}",
-                            re_error::format_ref(&err)
-                        );
-                    }
+    //     loop {
+    //         match TcpStream::connect(self.address.clone()).await {
+    //             Ok(socket) => {
+    //                 if let Err(err) = socket.set_linger(Some(Duration::from_secs(2))) {
+    //                     re_log::error!(
+    //                         "Failed to set socket linger: {}",
+    //                         re_error::format_ref(&err)
+    //                     );
+    //                 }
 
-                    re_log::info!("Connected to {}", self.address);
-                    let (read_half, write_half) = tokio::io::split(socket);
+    //                 re_log::info!("Connected to {}", self.address);
+    //                 let (read_half, write_half) = tokio::io::split(socket);
 
-                    // Spawn tasks to handle read and write
-                    let reader_task = tokio::spawn(Self::handle_read(read_half));
-                    let writer_task = {
-                        let message_queue = Arc::clone(&self.message_queue);
-                        let notify = Arc::clone(&self.notify);
-                        tokio::spawn(async move {
-                            Self::handle_write(write_half, message_queue, notify).await;
-                        })
-                    };
+    //                 // Spawn tasks to handle read and write
+    //                 let reader_task = tokio::spawn(Self::handle_read(read_half));
+    //                 let writer_task = {
+    //                     let message_queue = Arc::clone(&self.message_queue);
+    //                     let notify = Arc::clone(&self.notify);
+    //                     tokio::spawn(async move {
+    //                         Self::handle_write(write_half, message_queue, notify).await;
+    //                     })
+    //                 };
 
-                    // Wait for tasks to complete
-                    tokio::select! {
-                        result = reader_task => {
-                            if let Err(err) = result {
-                                re_log::error!("Reader task ended with error: {}", re_error::format_ref(&err));
-                            }
-                        }
-                        result = writer_task => {
-                            if let Err(err) = result {
-                                re_log::error!("Writer task ended with error: {}", re_error::format_ref(&err));
-                            }
-                        }
-                    }
+    //                 // Wait for tasks to complete
+    //                 tokio::select! {
+    //                     result = reader_task => {
+    //                         if let Err(err) = result {
+    //                             re_log::error!("Reader task ended with error: {}", re_error::format_ref(&err));
+    //                         }
+    //                     }
+    //                     result = writer_task => {
+    //                         if let Err(err) = result {
+    //                             re_log::error!("Writer task ended with error: {}", re_error::format_ref(&err));
+    //                         }
+    //                     }
+    //                 }
 
-                    re_log::info!("Connection lost. Attempting to reconnect...");
-                }
-                Err(err) => {
-                    re_log::error!(
-                        "Failed to connect to {}: {}",
-                        self.address,
-                        re_error::format_ref(&err)
-                    );
-                }
-            }
+    //                 re_log::info!("Connection lost. Attempting to reconnect...");
+    //             }
+    //             Err(err) => {
+    //                 re_log::error!(
+    //                     "Failed to connect to {}: {}",
+    //                     self.address,
+    //                     re_error::format_ref(&err)
+    //                 );
+    //             }
+    //         }
 
-            // Wait some time before attempting to reconnect
-            tokio::time::sleep(Duration::from_secs(5)).await;
-        }
-    }
+    //         // Wait some time before attempting to reconnect
+    //         // tokio::time::sleep(Duration::from_secs(5)).await;
+    //     }
+    // }
 
     async fn global_message_handler(
         rx: Arc<Mutex<UnboundedReceiver<Message>>>,

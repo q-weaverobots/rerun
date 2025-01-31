@@ -1,4 +1,4 @@
-use custom_callback::{comms::viewer::ControlViewer, panel::Control};
+use custom_callback::comms::viewer::panel::Control;
 
 use rerun::external::{eframe, re_log, re_memory, re_sdk_comms, re_viewer};
 
@@ -33,13 +33,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     )?;
 
     // First we attempt to connect to the external application
-    let viewer = ControlViewer::connect(format!("127.0.0.1:{CONTROL_PORT}")).await?;
-    let handle = viewer.handle();
+    // let viewer = ControlViewer::connect(format!("127.0.0.1:{CONTROL_PORT}")).await?;
+    // let handle = viewer.handle();
 
-    // Spawn the viewer client in a separate task
-    tokio::spawn(async move {
-        viewer.run().await;
-    });
+    // // Spawn the viewer client in a separate task
+    // tokio::spawn(async move {
+    //     viewer.run().await;
+    // });
 
     // Then we start the Rerun viewer
     let mut native_options = re_viewer::native::eframe_options(None);
@@ -48,29 +48,29 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_app_id("rerun_custom_callback_example");
 
     // This is used for analytics, if the `analytics` feature is on in `Cargo.toml`
-    let app_env = re_viewer::AppEnvironment::Custom("My Custom Callback".to_owned());
+    // let app_env = re_viewer::AppEnvironment::Custom("My Custom Callback".to_owned());
 
-    let startup_options = re_viewer::StartupOptions::default();
-    let window_title = "Rerun Control Panel";
-    eframe::run_native(
-        window_title,
-        native_options,
-        Box::new(move |cc| {
-            re_viewer::customize_eframe_and_setup_renderer(cc)?;
+    // let startup_options = re_viewer::StartupOptions::default();
+    // let window_title = "Rerun Control Panel";
+    // eframe::run_native(
+    //     window_title,
+    //     native_options,
+    //     Box::new(move |cc| {
+    //         re_viewer::customize_eframe_and_setup_renderer(cc)?;
 
-            let mut rerun_app = re_viewer::App::new(
-                main_thread_token,
-                re_viewer::build_info(),
-                &app_env,
-                startup_options,
-                cc,
-            );
+    //         let mut rerun_app = re_viewer::App::new(
+    //             main_thread_token,
+    //             re_viewer::build_info(),
+    //             &app_env,
+    //             startup_options,
+    //             cc,
+    //         );
 
-            rerun_app.add_receiver(rx);
+    //         rerun_app.add_receiver(rx);
 
-            Ok(Box::new(Control::new(rerun_app, handle)))
-        }),
-    )?;
+    //         Ok(Box::new(Control::new(rerun_app, handle)))
+    //     }),
+    // )?;
 
     Ok(())
 }

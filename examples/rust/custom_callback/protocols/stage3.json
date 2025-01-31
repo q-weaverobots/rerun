@@ -1,0 +1,16 @@
+{
+    "protocol": [
+        "Grab the left side of the folded t-shirt and pull it left to clear your workstation.",
+        "There is a pile of folded t-shirts on your right side. Grab and pull the corner of that pile until the corner is in the center of the workstation.",
+        "Pull the right side of the folded t-shirt over to the center of your workstation.",
+        "Grab the left side and right side of the folded t-shirt and place it on the pile to your right.",
+        "Grab the bottom right corner of the pile of folded t-shirts and drag it to the edge of your workstation."
+    ],
+    "annotations": [
+        {
+            "id": 0,
+            "frame_idx": 0,
+            "text": "You are a bi-manual robot named Isaac. Your objective is to neatly stack the folded t-shirt in front of you and place it in a pile to the side of your workstation. Once the t-shirt is neatly placed away, your task is complete."
+        }
+    ]
+}

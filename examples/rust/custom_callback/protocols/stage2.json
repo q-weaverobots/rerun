@@ -1,0 +1,15 @@
+{
+    "protocol": [
+        "fold the right side",
+        "fold the left side",
+        "fold t-shirt in half",
+        "flatten the t-shirt"
+    ],
+    "annotations": [
+        {
+            "id": 0,
+            "frame_idx": 0,
+            "text": "You are a bi-manual robot named Isaac. Your objective is to neatly fold the laid out t-shirt in front of you. Start by folding in the right side, then the left, then folding the shirt in half. Finally, flatten the folded t-shirt to complete the task."
+        }
+    ]
+}
